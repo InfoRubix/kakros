@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ROSE JUAL RUMAH - Document Generator</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" xintegrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
     <style>
         body {
@@ -214,6 +214,8 @@
                             <input id="docNumber" type="text" placeholder="Quotation #" class="form-input" oninput="updatePreview()">
                             <input id="docDate" type="date" class="form-input" oninput="updatePreview()">
                             <input id="docDueDate" type="text" placeholder="Validity (e.g., 7 Days)" class="form-input" oninput="updatePreview()" value="7 Days">
+                            <input id="signerSignature" type="text" placeholder="Signature Name (Calligraphy)" class="form-input" oninput="updatePreview()">
+                            <input id="signerTitle" type="text" placeholder="Signer Title (e.g. Pengurus)" class="form-input" oninput="updatePreview()" value="Pengurus">
                         </div>
                     </div>
 
@@ -416,10 +418,11 @@
                                         Tunai/Cek No: <span id="old-notes" class="border-b border-dotted border-black min-w-[120px] inline-block px-2 text-center"></span>
                                     </div>
                                 </div>
-                                <div class="text-center">
-                                    <div class="border-b border-dotted border-black w-48 mb-2 h-16 flex items-end justify-center">
+                                <div class="text-center flex flex-col items-center">
+                                    <div class="border-b border-dotted border-black w-48 mb-2 h-16 flex items-end justify-center relative">
+                                        <span id="old-signature" class="absolute bottom-1 text-3xl font-bold" style="font-family: 'Dancing Script', cursive;"></span>
                                     </div>
-                                    <div class="font-bold text-sm">Pengurus</div>
+                                    <div class="font-bold text-sm" id="old-signerTitle">Pengurus</div>
                                 </div>
                             </div>
                             
@@ -649,6 +652,10 @@
             document.getElementById('old-clientName').textContent = document.getElementById('clientName').value || document.getElementById('clientCompany').value;
             document.getElementById('old-docNumber').textContent = document.getElementById('docNumber').value;
             
+            // Update Signature & Title
+            document.getElementById('old-signerTitle').textContent = document.getElementById('signerTitle').value || 'Pengurus';
+            document.getElementById('old-signature').textContent = document.getElementById('signerSignature').value;
+
             if (dateValue) {
                 const [year, month, day] = dateValue.split('-');
                 const malayMonth = malayMonths[parseInt(month) - 1];
@@ -826,6 +833,9 @@
             document.getElementById('clientPhone').value = doc.ClientPhone || '';
             document.getElementById('notes').value = doc.Notes;
             document.getElementById('taxRate').value = doc.TaxRate;
+            
+            document.getElementById('signerSignature').value = doc.SignerSignature || '';
+            document.getElementById('signerTitle').value = doc.SignerTitle || 'Pengurus';
 
             // Populate items
             const itemsContainer = document.getElementById('items-container');
@@ -934,6 +944,8 @@
                 taxAmount: taxAmount,
                 totalAmount: totalAmount,
                 notes: document.getElementById('notes').value,
+                signerSignature: document.getElementById('signerSignature').value,
+                signerTitle: document.getElementById('signerTitle').value,
             };
             
             const payload = {
